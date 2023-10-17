@@ -10,6 +10,7 @@ public class Monster {
 	
 	public Monster(int hp, int attack, int defense, int speed, int money) {
 		this.hp = hp;
+		this.attack = attack;
 		this.defense = defense;
 		this.speed = speed;
 		this.money = money;
@@ -25,14 +26,12 @@ public class Monster {
 		this.hp = hp;
 	}
 
+	public void attack(Hero hero) {
+		hero.setHp(hero.getHp()-attack);
+	}
 	
 	public int getAttack() {
 		return attack;
-	}
-
-	
-	public void setAttack(int attack) {
-		this.attack = attack;
 	}
 
 	
@@ -41,18 +40,8 @@ public class Monster {
 	}
 
 	
-	public void setDefense(int defense) {
-		this.defense = defense;
-	}
-
-	
 	public int getSpeed() {
 		return speed;
-	}
-
-	
-	public void setSpeed(int speed) {
-		this.speed = speed;
 	}
 
 	

@@ -2,6 +2,7 @@ package Dungeon;
 
 public class Hero {
 	
+	private int maxHp;
 	private int hp;
 	private int attack;
 	private int defense;
@@ -10,7 +11,8 @@ public class Hero {
 	private int xp;
 	private int level;
 	
-	public Hero(int hp, int attack, int defense, int speed, int money) {
+	public Hero(int maxHp, int hp, int attack, int defense, int speed, int money) {
+		this.maxHp = maxHp;
 		this.hp = hp;
 		this.attack = attack;
 		this.defense = defense;
@@ -18,6 +20,13 @@ public class Hero {
 		this.money = money;
 	}
 	
+	public int getMaxHp() {
+		return maxHp;
+	}
+	
+	public void setMaxHp(int maxHp) {
+		this.maxHp = maxHp;
+	}
 	
 	public int getHp() {
 		return hp;
@@ -68,8 +77,7 @@ public class Hero {
 		this.money = money;
 	}
 	
-	public void fight(Monster monster) {
-		hp -= monster.getAttack();
+	public void attack(Monster monster) {
 		monster.setHp(monster.getHp()-attack);
 	}
 	

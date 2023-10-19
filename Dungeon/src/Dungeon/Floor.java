@@ -1,12 +1,14 @@
 package Dungeon;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import Dungeon.rooms.Entry;
 import Dungeon.rooms.Ladder;
 import linkedList.CircularlyDoublyLinkedContainer;
 
-public class Floor {
+public class Floor implements Serializable {
+	private static final long serialVersionUID = 4798732347102318721L;
 	private Random random = new Random();
 	private CircularlyDoublyLinkedContainer<Room> floor = new CircularlyDoublyLinkedContainer<Room>();
 	

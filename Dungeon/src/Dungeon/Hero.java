@@ -1,7 +1,10 @@
 package Dungeon;
 
-public class Hero {
+import java.io.Serializable;
+
+public class Hero implements Serializable {
 	
+	private static final long serialVersionUID = 8497526073264669892L;
 	private int maxHp;
 	private int hp;
 	private int attack;
@@ -95,5 +98,9 @@ public class Hero {
 	
 	public int getLevel() {
 		return level;
+	}
+	
+	public boolean isAlive() {
+		return (hp >= 1);
 	}
 }

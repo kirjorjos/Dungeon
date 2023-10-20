@@ -2,6 +2,8 @@ package Dungeon;
 
 import java.io.Serializable;
 
+import linkedList.CircularlyDoublyLinkedContainer;
+
 public class Hero implements Serializable {
 	
 	private static final long serialVersionUID = 8497526073264669892L;
@@ -11,16 +13,18 @@ public class Hero implements Serializable {
 	private int defense;
 	private int speed;
 	private int money;
-	private int xp;
 	private int level;
+	private Room currentRoom;
+	private CircularlyDoublyLinkedContainer<Room> roomList;
 	
-	public Hero(int maxHp, int hp, int attack, int defense, int speed, int money) {
+	public Hero(int maxHp, int hp, int attack, int defense, int speed, int money, CircularlyDoublyLinkedContainer<Room> roomList) {
 		this.maxHp = maxHp;
 		this.hp = hp;
 		this.attack = attack;
 		this.defense = defense;
 		this.speed = speed;
 		this.money = money;
+		this.roomList = roomList;
 	}
 	
 	public int getMaxHp() {
@@ -84,10 +88,6 @@ public class Hero implements Serializable {
 		monster.setHp(monster.getHp()-attack);
 	}
 	
-	public int getXp() {
-		return xp;
-	}
-	
 	public void increaseLevel() {
 		level++;
 		hp *= 1.1;
@@ -101,6 +101,49 @@ public class Hero implements Serializable {
 	}
 	
 	public boolean isAlive() {
-		return (hp >= 1);
+		return !(hp <= 0);
+	}
+
+	public Room getCurrentRoom() {
+		return currentRoom;
+	}
+
+	public void setCurrentRoom(Room currentRoom) {
+		this.currentRoom = currentRoom;
+	}
+	
+	public void useItem(Item item) {
+		int increaseAmount = item.getBonusAmount();
+		if (item.getBonusType().equals("hp")) {
+			if (hp + increaseAmount > maxHp) {
+				hp = maxHp;
+			} else {
+				hp += increaseAmount;
+			}
+		}
+		switch(item.getBonusType()) {
+			case "maxHp":
+				maxHp += increaseAmount;
+				break;
+			case "attack":
+				attack += increaseAmount;
+				break;
+			case "defense":
+				defense += increaseAmount;
+				break;
+			case "speed":
+				speed += increaseAmount;
+				break;
+			case "money":
+				money += increaseAmount;
+		}
+	}
+	
+	public Room moveLeft() {
+		return roomList.previous().getData();
+	}
+	
+	public Room moveRight() {
+		return roomList.next().getData();
 	}
 }

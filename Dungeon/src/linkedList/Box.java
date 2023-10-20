@@ -46,4 +46,8 @@ public class Box<E> {
 	public Box<E> getPreviousBox() {
 		return previousBox;
 	}
+	
+	public E getData() {
+		return data;
+	}
 }

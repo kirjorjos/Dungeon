@@ -12,18 +12,23 @@ public class CircularlyDoublyLinkedContainer<E> implements DataTraverser<Box<E>>
 	
 	public CircularlyDoublyLinkedContainer(E data) {
 		head = new Box<E>(data);
+		head.setNextBox(head);
+		head.setPreviousBox(head);
 	}
 	
 	public void add(E data) {
 		Box<E> boxToAdd = new Box<E>(data);
 		if (head == null) {
 			head = new Box<E>(data);
+			head.setNextBox(head);
+			head.setPreviousBox(head);
+			currentBox = head;
 			return;
 		}
 		boolean foundLastBox = false;
 		Box<E> lastBox = head;
 		while (!foundLastBox) {
-			if (lastBox.getNextBox() == null) {
+			if (lastBox.getNextBox().equals(head)) {
 				foundLastBox = true;
 			} else {
 				lastBox = lastBox.getNextBox();
@@ -33,6 +38,14 @@ public class CircularlyDoublyLinkedContainer<E> implements DataTraverser<Box<E>>
 		head.setPreviousBox(boxToAdd);
 		boxToAdd.setNextBox(head);
 		size++;
+	}
+	
+	public E get(int index) {
+		Box<E> tempCurrent = head;
+		for (int i = 0; i < index; i++) {
+			tempCurrent = tempCurrent.getNextBox();
+		}
+		return tempCurrent.getData();
 	}
 	
 	public void add(E data, int index) {
@@ -148,15 +161,17 @@ public class CircularlyDoublyLinkedContainer<E> implements DataTraverser<Box<E>>
 
 	@Override
 	public Box<E> next() {
-		if (currentBox.getNextBox().equals(head)) {
-			throw new Error("No next box");
-		}
 		currentBox = currentBox.getNextBox();
 		return currentBox;
 	}
 
 	@Override
 	public Boolean hasNext() {
-		return (!currentBox.getNextBox().equals(head));
+		return true;
+	}
+	
+	public Box<E> previous() {
+		currentBox = currentBox.getPreviousBox();
+		return currentBox;
 	}
 }

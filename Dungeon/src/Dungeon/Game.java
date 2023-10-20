@@ -8,14 +8,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.HashSet;
+
 
 public class Game {
 	private Floor floor;
 	private Hero hero;
 	private Scanner scanner = new Scanner(System.in);
 	private File file;
-	Object[] objects = {floor, hero};
+	private Object[] objects = {floor, hero};
+	private boolean endGame = false;
 	
 	public Game() {
 		
@@ -23,7 +24,7 @@ public class Game {
 	
 	public void runGame() throws ClassNotFoundException, IOException {
 		System.out.println("Would you like to (1.)load a game or (2.)start a new one?");
-		switch(scanner.next()) {
+		switch(scanner.nextLine()) {
 			case "1":
 				String filePath;
 				System.out.println("Please input the filepath to your save file or type \"back\" to go back");
@@ -37,6 +38,7 @@ public class Game {
 			case "2":
 				floor = new Floor(1);
 				buildHero();
+				floor.setHero(hero);
 				runMainLoop();
 				break;
 			default:
@@ -45,16 +47,63 @@ public class Game {
 		}
 	}
 	
-	private void runMainLoop() {
-		while (hero.isAlive()) {
+	private void runMainLoop() throws IOException {
+		while (hero.isAlive() && !endGame) {
 			System.out.println("Which do you want to do?");
 			System.out.println("1. View the map");
 			System.out.println("2. Look at your stats");
 			System.out.println("3. Go left");
 			System.out.println("4. Go right");
 			System.out.println("5. Exit the game");
-			
+			switch(scanner.next()) {
+			case "1":
+				viewMap();
+				break;
+			case "2":
+				displayStats();
+				break;
+			case "3":
+				moveLeft();
+				break;
+			case "4":
+				moveRight();
+				break;
+			case "5":
+				exitGame();
+				break;
+			default:
+				System.out.println("Please enter a number 1-5.");
+			}
 		}
+		System.out.println(hero.getHp());
+	}
+	
+	private void viewMap() {
+	    int floorSize = floor.getSize();
+	    int centerX = floorSize / 2;
+	    int centerY = floorSize / 2;
+	    double radius = Math.min(centerX, centerY) * 0.8; // calculate the radius based on a scaling factor found through trial and error
+	    String[][] displayGrid = new String[floorSize][floorSize];
+
+	    for (int i = 0; i < floor.getSize(); i++) {
+	        double angle = 2 * Math.PI * i / floor.getSize();
+	        int x = (int) Math.round(centerX + radius * Math.cos(angle));
+	        int y = (int) Math.round(centerY + radius * Math.sin(angle));
+
+	        // Error checking
+	        x = Math.min(Math.max(x, 0), floorSize - 1);
+	        y = Math.min(Math.max(y, 0), floorSize - 1);
+
+	        displayGrid[x][y] = floor.getRoom(i).getDisplayName();
+	    }
+
+	    // Print the circular grid
+	    for (int i = 0; i < floorSize; i++) {
+	        for (int j = 0; j < floorSize; j++) {
+	            System.out.print(displayGrid[i][j] != null ? displayGrid[i][j] : "       ");
+	        }
+	        System.out.println();
+	    }
 	}
 	
 	private void exitGame() throws IOException {
@@ -65,6 +114,7 @@ public class Game {
 			}
 			saveGame();
 		}
+		endGame = true;
 	}
 	
 	private void saveGame() throws IOException {
@@ -101,14 +151,18 @@ public class Game {
 	
 	private void buildHero() {
 		int points = 50;
-		int maxHp, hp, attack, defense, speed, money;
+		int hp, attack, defense, speed, money;
 		System.out.println("You get 50 points to distribute amoung the hero's attributes: Hp, Attack Power, Defense, Speed, and Starting Money.  Please choose how many points you want to spend on each.");
 		hp = getHp(points);
+		points -= hp;
 		attack = getAttack(points);
+		points -= attack;
 		defense = getDefense(points);
+		points -= defense;
 		speed = getSpeed(points);
+		points -= speed;
 		money = getMoney(points);
-		hero = new Hero(hp, hp, attack, defense, speed, money);	//2 HPs because 1 is max and 1 is current
+		hero = new Hero(hp, hp, attack, defense, speed, money, floor.getRoomList());	//2 HPs because 1 is max and 1 is current
 	}
 	
 	private int getHp(int points) {
@@ -122,10 +176,10 @@ public class Game {
 			return getHp(points);
 		}
 		if (hp > points) {
-			System.out.printf("%d isn't a valid number of points to use.  Please try again.%n", points);
+	        System.out.printf("%d isn't a valid number of points to use. You have %d points left. Please try again.%n",hp, points);
 			return getHp(points);
 		}
-		return points;
+		return hp;
 	}
 	
 	private int getAttack(int points) {
@@ -139,7 +193,7 @@ public class Game {
 	        return getAttack(points);
 	    }
 	    if (attack > points) {
-	        System.out.printf("%d isn't a valid number of points to use. Please try again.%n", points);
+	        System.out.printf("%d isn't a valid number of points to use. You have %d points left. Please try again.%n",attack, points);
 	        return getAttack(points);
 	    }
 	    return attack;
@@ -156,7 +210,7 @@ public class Game {
 	        return getDefense(points);
 	    }
 	    if (defense > points) {
-	        System.out.printf("%d isn't a valid number of points to use. Please try again.%n", points);
+	        System.out.printf("%d isn't a valid number of points to use. You have %d points left. Please try again.%n",defense, points);
 	        return getDefense(points);
 	    }
 	    return defense;
@@ -173,7 +227,7 @@ public class Game {
 	        return getSpeed(points);
 	    }
 	    if (speed > points) {
-	        System.out.printf("%d isn't a valid number of points to use. Please try again.%n", points);
+	        System.out.printf("%d isn't a valid number of points to use. You have %d points left. Please try again.%n",speed, points);
 	        return getSpeed(points);
 	    }
 	    return speed;
@@ -190,9 +244,32 @@ public class Game {
 	        return getMoney(points);
 	    }
 	    if (money > points) {
-	        System.out.printf("%d isn't a valid number of points to use. Please try again.%n", points);
+	        System.out.printf("%d isn't a valid number of points to use. You have %d points left. Please try again.%n",money, points);
 	        return getMoney(points);
 	    }
 	    return money;
+	}
+	
+	private void displayStats() {
+		System.out.println("Max HP: " + hero.getMaxHp());
+		System.out.println("Current HP: " + hero.getHp());
+		System.out.println("Attack: " + hero.getAttack());
+		System.out.println("Defense: " + hero.getDefense());
+		System.out.println("Speed: " + hero.getSpeed());
+		System.out.println("Money: " + hero.getMoney());
+	}
+	
+	private void moveLeft() {
+		Room oldRoom = hero.getCurrentRoom();
+		Room room = hero.moveLeft();
+		room.interact();
+		floor.removeRoom(oldRoom);
+	}
+	
+	private void moveRight() {
+		Room oldRoom = hero.getCurrentRoom();
+		Room room = hero.moveRight();
+		room.interact();
+		floor.removeRoom(oldRoom);
 	}
 }

@@ -49,4 +49,7 @@ public class Monster {
 		return money;
 	}
 	
+	public boolean isAlive() {
+		return (hp <= 0);
+	}
 }

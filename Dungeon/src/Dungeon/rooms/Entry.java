@@ -6,6 +6,12 @@ public class Entry extends Room {
 
 	public Entry(int floor) {
 		super(floor);
+		setDisplayName("  Entry  ");
+	}
+
+	@Override
+	public void interact() {
+		
 	}
 
 }

@@ -94,7 +94,7 @@ public class Game {
 	        x = Math.min(Math.max(x, 0), floorSize - 1);
 	        y = Math.min(Math.max(y, 0), floorSize - 1);
 
-	        displayGrid[x][y] = floor.getRoom(i).getDisplayName();
+	        displayGrid[x][y] = floor.getRoom(i).toString();
 	    }
 
 	    // Print the circular grid
@@ -263,13 +263,13 @@ public class Game {
 		Room oldRoom = hero.getCurrentRoom();
 		Room room = hero.moveLeft();
 		room.interact();
-		floor.removeRoom(oldRoom);
+		System.out.println(floor.removeRoom(oldRoom));
 	}
 	
 	private void moveRight() {
 		Room oldRoom = hero.getCurrentRoom();
 		Room room = hero.moveRight();
 		room.interact();
-		floor.removeRoom(oldRoom);
+		System.out.println(floor.removeRoom(oldRoom));
 	}
 }

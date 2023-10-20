@@ -1,5 +1,7 @@
 package linkedList;
 
+import java.util.Objects;
+
 public class CircularlyDoublyLinkedContainer<E> implements DataTraverser<Box<E>> {
 	
 	private Box<E> head;
@@ -118,9 +120,9 @@ public class CircularlyDoublyLinkedContainer<E> implements DataTraverser<Box<E>>
 		boolean foundElement = false;
 		Box<E> boxToRemove = head;
 		while (!foundElement) {
-			if (boxToRemove.equals(head)) {
+			if (boxToRemove.equals(head) && !boxToRemove.getData().equals(element)) {
 				return false;
-			} else if (boxToRemove.toString().equals(element)) {
+			} else if (boxToRemove.getData().equals(element)) {
 				foundElement = true;
 				Box<E> nextBox = boxToRemove.getNextBox();
 				boxToRemove.setNextBox(boxToRemove.getPreviousBox());
@@ -130,6 +132,7 @@ public class CircularlyDoublyLinkedContainer<E> implements DataTraverser<Box<E>>
 			}
 		}
 		size--;
+		System.out.println(boxToRemove.getData().getClass().getName());
 		return true;
 	}
 		
@@ -173,5 +176,22 @@ public class CircularlyDoublyLinkedContainer<E> implements DataTraverser<Box<E>>
 	public Box<E> previous() {
 		currentBox = currentBox.getPreviousBox();
 		return currentBox;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(currentBox, head, size);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CircularlyDoublyLinkedContainer other = (CircularlyDoublyLinkedContainer) obj;
+		return Objects.equals(currentBox, other.currentBox) && Objects.equals(head, other.head) && size == other.size;
 	}
 }

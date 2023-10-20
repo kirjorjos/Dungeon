@@ -1,6 +1,7 @@
 package Dungeon;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Random;
 
 import Dungeon.rooms.Entry;
@@ -57,7 +58,24 @@ public class Floor implements Serializable {
 		return floor;
 	}
 	
-	public void removeRoom(Room room) {
-		floor.remove(room);
+	public boolean removeRoom(Room room) {
+		return floor.remove(room);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(floor, hero, level);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Floor other = (Floor) obj;
+		return Objects.equals(floor, other.floor) && Objects.equals(hero, other.hero) && level == other.level;
 	}
 }

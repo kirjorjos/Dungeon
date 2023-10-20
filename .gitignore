@@ -26,3 +26,4 @@ replay_pid*
 # Eclipse Files
 .project
 .DS_Store
+/bin/

@@ -11,7 +11,7 @@ public class Entry extends Room {
 
 	@Override
 	public void interact() {
-		
+		// nothing to do here, just need to define the method
 	}
 
 }

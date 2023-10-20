@@ -1,5 +1,7 @@
 package Dungeon;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class Item {
@@ -54,5 +56,32 @@ public class Item {
 		String rarity = generateRarity();
 		itemType = itemTypes[random.nextInt((bonusIntType+1)*3-2, (bonusIntType+1)*3-1)];	//bonusIntType is the index in the array bonusTypes of the type, then a calculation is done to make it work with groups of 3 instead of groups of 1
 		return rarity + " " + itemType;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(bonusTypes);
+		result = prime * result + Arrays.hashCode(itemTypes);
+		result = prime * result + Arrays.hashCode(rarities);
+		result = prime * result + Objects.hash(bonusAmount, bonusIntType, bonusType, floor, itemType, name);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Item other = (Item) obj;
+		return bonusAmount == other.bonusAmount && bonusIntType == other.bonusIntType
+				&& Objects.equals(bonusType, other.bonusType) && Arrays.equals(bonusTypes, other.bonusTypes)
+				&& floor == other.floor && Objects.equals(itemType, other.itemType)
+				&& Arrays.equals(itemTypes, other.itemTypes) && Objects.equals(name, other.name)
+				&& Arrays.equals(rarities, other.rarities);
 	}
 }

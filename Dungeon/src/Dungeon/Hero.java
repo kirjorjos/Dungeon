@@ -1,6 +1,7 @@
 package Dungeon;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import linkedList.CircularlyDoublyLinkedContainer;
 
@@ -124,19 +125,25 @@ public class Hero implements Serializable {
 		switch(item.getBonusType()) {
 			case "maxHp":
 				maxHp += increaseAmount;
+				System.out.println("You obtain The " + item.getName() + " and equip it.  The devine gods bless you and bestow upon you the ability to heal to lengths you never could before. Your max healt is increased by " + increaseAmount + ".");
 				break;
 			case "attack":
 				attack += increaseAmount;
+				System.out.println("You obtain The " + item.getName() + " and equip it.  It's glorius powers boost your attack power by " + increaseAmount + " attack points.");
 				break;
 			case "defense":
-				defense += increaseAmount;
+				defense *= (double)(increaseAmount/100)+1;
+				System.out.println("You obtain The " + item.getName() + " and equip it.  It increases your defense by " + increaseAmount + " percent.");
 				break;
 			case "speed":
 				speed += increaseAmount;
+				System.out.println("You obtain The " + item.getName() + " and equip it.  It increases your speed by " + increaseAmount + ".");
 				break;
 			case "money":
 				money += increaseAmount;
+				System.out.printf("You find a large pile of money.  You collect it and it has %d coins.", increaseAmount);
 		}
+		System.out.printf("%n");
 	}
 	
 	public Room moveLeft() {
@@ -145,5 +152,24 @@ public class Hero implements Serializable {
 	
 	public Room moveRight() {
 		return roomList.next().getData();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(attack, currentRoom, defense, hp, level, maxHp, money, roomList, speed);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Hero other = (Hero) obj;
+		return attack == other.attack && Objects.equals(currentRoom, other.currentRoom) && defense == other.defense
+				&& hp == other.hp && level == other.level && maxHp == other.maxHp && money == other.money
+				&& Objects.equals(roomList, other.roomList) && speed == other.speed;
 	}
 }

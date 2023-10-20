@@ -24,6 +24,6 @@ public class Trap extends Room {
 	
 	public void interact() {
 		hero.setHp(hero.getHp()-damage);
-		System.out.printf("You hit a trap and took %d damage!%n");
+		System.out.printf("You hit a trap and took %d damage!%n", damage);
 	}
 }

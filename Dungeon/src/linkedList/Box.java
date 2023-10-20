@@ -1,5 +1,7 @@
 package linkedList;
 
+import java.util.Objects;
+
 public class Box<E> {
 	private E data;
 	private Box<E> previousBox = null;
@@ -49,5 +51,23 @@ public class Box<E> {
 	
 	public E getData() {
 		return data;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(data, nextBox, previousBox);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Box<E> other = (Box<E>) obj;
+		return Objects.equals(data, other.data) && Objects.equals(nextBox, other.nextBox)
+				&& Objects.equals(previousBox, other.previousBox);
 	}
 }
